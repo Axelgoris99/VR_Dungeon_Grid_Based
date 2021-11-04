@@ -7,22 +7,54 @@
  * MIT Licence                                                *
  * ************************************************************/
 using UnityEngine;
+using UnityEngine.InputSystem;
+using System.Collections;
+using System.Collections.Generic;
 
 public class AnimatedGridMovement : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask wallLayerMask;
+
     private const float LeftHand = -90.0f;
     private const float RightHand = +90.0f;
 
     [SerializeField] private float gridSize = 4.0f;
-    [SerializeField] private float rotationSpeed = 5.0f;
     [SerializeField] private float movementSpeed = 1.0f;
 
     private Vector3 moveTowardsPosition;
     private Quaternion rotateFromDirection;
     private Quaternion rotateTowardsDirection;
-  
-    private float rotationTime = 0.0f;
 
+    private Controls playerInput;
+    private InputAction move;
+
+    [SerializeField] private Transform mainCam;
+    private Vector3[] axis = new Vector3[4];
+
+    private void Awake()
+    {
+        axis[0] = Vector3.forward;
+        axis[1] = -Vector3.forward;
+        axis[2] = Vector3.right;
+        axis[3] = -Vector3.right;
+
+
+        playerInput = new Controls();
+    }
+
+    private void OnEnable()
+    {
+        //move = playerInput.Player.Move;
+        //move.Enable();
+        playerInput.Player.Move.performed += MoveAndRotate;
+        playerInput.Player.Move.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerInput.Player.Move.Disable();
+    }
     void Start()
     {
         moveTowardsPosition = transform.position;
@@ -30,62 +62,86 @@ public class AnimatedGridMovement : MonoBehaviour
         rotateFromDirection = transform.rotation;
     }
 
+    public void MoveAndRotate(InputAction.CallbackContext value)
+    {
+        var val = value.ReadValue<Vector2>();
+        print(val);
+        if (val.y > 0.5f)
+        {
+            MoveForward();
+        }
+        else if (val.y < -0.5f)
+        {
+            MoveBackward();
+        }
+        else if (val.x < -0.5f)
+        {
+            TurnLeft();
+        }
+        else if (val.x > 0.5f)
+        {
+            TurnRight();
+        }
+    }
+
     private void FixedUpdate()
     {
         if (IsStationary())
         {
-            // Personaly I would prefer a dictionary<KeyCode,Action> lookup but this does not seem possible with Unity3D.Input
-            if (Input.GetKey(KeyCode.W))
-            {
-                MoveForward();
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                MoveBackward();
-            }
-            else if (Input.GetKey(KeyCode.Q))
-            {
-                TurnLeft();
-            }
-            else if (Input.GetKey(KeyCode.E))
-            {
-                TurnRight();
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                StrafeLeft();
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                StrafeRight();
-            }
+            //Vector2 moveAndRotate = move.ReadValue<Vector2>();
+           
+            //if (moveAndRotate == new Vector2(0f, 1f))
+            //{
+            //    MoveForward();
+            //}
+            //else if (moveAndRotate == new Vector2(0f, -1f))
+            //{
+            //    MoveBackward();
+            //}
+            //else if (moveAndRotate == new Vector2(1f, 0f))
+            //{
+            //    TurnLeft();
+            //}
+            //else if (moveAndRotate == new Vector2(-1f, 0f))
+            //{
+            //    TurnRight();
+            //}
+            //else if (Input.GetKey(KeyCode.A))
+            //{
+            //    StrafeLeft();
+            //}
+            //else if (Input.GetKey(KeyCode.E))
+            //{
+            //    StrafeRight();
+            //}
         }
     }
-
     void Update()
     {
         if (IsMoving())
         {
             var step = Time.deltaTime * gridSize * movementSpeed;
-            AnimateMovement(step);
+            //AnimateMovement(step);
+            transform.position = moveTowardsPosition;
         }
         if (IsRotating())
         {
-            AnimateRotation();
+            //AnimateRotation();
+            transform.rotation = rotateTowardsDirection;
         }
     }
 
-    private void AnimateRotation()
-    {
-        rotationTime += Time.deltaTime;
-        transform.rotation = Quaternion.Slerp(rotateFromDirection, rotateTowardsDirection, rotationTime * rotationSpeed);
-        CompensateRotationRoundingErrors();
-    }
+    //private void AnimateRotation()
+    //{
+    //    rotationTime += Time.deltaTime;
+    //    transform.rotation = Quaternion.Slerp(rotateFromDirection, rotateTowardsDirection, rotationTime * rotationSpeed);
+    //    CompensateRotationRoundingErrors();
+    //}
 
-    private void AnimateMovement(float step)
-    {
-        transform.position = Vector3.MoveTowards(transform.position, moveTowardsPosition, step);
-    }
+    //private void AnimateMovement(float step)
+    //{
+    //    transform.position = Vector3.MoveTowards(transform.position, moveTowardsPosition, step);
+    //}
 
     private void CompensateRotationRoundingErrors()
     {
@@ -109,26 +165,39 @@ public class AnimatedGridMovement : MonoBehaviour
         CollisonCheckedMovement(-CalculateForwardPosition());
     }
 
-    private void StrafeRight()
-    {
-        CollisonCheckedMovement(CalculateStrafePosition());
-    }
+    //private void StrafeRight()
+    //{
+    //    CollisonCheckedMovement(CalculateStrafePosition());
+    //}
 
-    private void StrafeLeft()
-    {
-        CollisonCheckedMovement(-CalculateStrafePosition());
-    }
+    //private void StrafeLeft()
+    //{
+    //    CollisonCheckedMovement(-CalculateStrafePosition());
+    //}
 
     private void CollisonCheckedMovement(Vector3 movementDirection)
     {
         Vector3 targetPosition = moveTowardsPosition + movementDirection;
         
-        // TODO: Replace the true flag with your collision detection code.
-        bool canMove = true;
-        if (canMove)
+        if (CollisionDetection(targetPosition))
         {
             moveTowardsPosition = targetPosition;
         }
+    }
+
+    /// <summary>
+    /// The collision detection method
+    /// </summary>
+    /// <returns></returns>
+    private bool CollisionDetection(Vector3 target)
+    {
+        bool canMove = true;
+        RaycastHit hit;
+        
+        if(Physics.Raycast(transform.position + new Vector3(0f, 0.5f, 0f), target - transform.position, out hit, 1.0f, wallLayerMask)){
+            canMove = false;
+        }
+        return canMove;
     }
 
     private void TurnRight()
@@ -144,7 +213,6 @@ public class AnimatedGridMovement : MonoBehaviour
     private void TurnEulerDegrees(in float eulerDirectionDelta)
     {
         rotateFromDirection = transform.rotation;
-        rotationTime = 0.0f;
         rotateTowardsDirection *= Quaternion.Euler(0.0f, eulerDirectionDelta, 0.0f);
     }
 
@@ -165,11 +233,22 @@ public class AnimatedGridMovement : MonoBehaviour
 
     private Vector3 CalculateForwardPosition()
     {
-        return transform.forward * gridSize;
+        Vector3 forwardPosition = transform.forward;
+        float angle = float.MaxValue;
+        for(int i =0; i<4; i++)
+        {
+            float newAngle = Mathf.Abs(Vector3.Angle(mainCam.forward, axis[i]));
+            if (newAngle < angle)
+            {
+                forwardPosition = axis[i];
+                angle = newAngle;
+            }
+        }
+        return forwardPosition * gridSize;
     }
 
-    private Vector3 CalculateStrafePosition()
-    {
-        return transform.right * gridSize;
-    }
+    //private Vector3 CalculateStrafePosition()
+    //{
+    //    return transform.right * gridSize;
+    //}
 }
