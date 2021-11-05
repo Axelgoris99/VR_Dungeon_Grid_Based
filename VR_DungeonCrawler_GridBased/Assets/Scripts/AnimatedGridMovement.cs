@@ -65,7 +65,6 @@ public class AnimatedGridMovement : MonoBehaviour
     public void MoveAndRotate(InputAction.CallbackContext value)
     {
         var val = value.ReadValue<Vector2>();
-        print(val);
         if (val.y > 0.5f)
         {
             MoveForward();
