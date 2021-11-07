@@ -20,6 +20,11 @@ public class AnimatedGridMovement : MonoBehaviour
     private const float RightHand = +90.0f;
 
     [SerializeField] private float gridSize = 4.0f;
+    public float GridSize
+    {
+        get { return gridSize; }
+    }
+
     [SerializeField] private float movementSpeed = 1.0f;
 
     private Vector3 moveTowardsPosition;
@@ -193,7 +198,7 @@ public class AnimatedGridMovement : MonoBehaviour
         bool canMove = true;
         RaycastHit hit;
         
-        if(Physics.Raycast(transform.position + new Vector3(0f, 0.5f, 0f), target - transform.position, out hit, 1.0f, wallLayerMask)){
+        if(Physics.Raycast(transform.position + new Vector3(0f, 0.5f, 0f), target - transform.position, out hit, gridSize, wallLayerMask)){
             canMove = false;
         }
         return canMove;

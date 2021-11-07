@@ -7,22 +7,44 @@ public class ControllersOutline : MonoBehaviour
     public LayerMask interactionMask;	// Everything we can interact with
     private GameObject objectHit;
     private Outline component;
+    private Vector3 orientation = new Vector3(0f, -3f, 0f);
+    public AnimatedGridMovement refGrid;
+    [SerializeField] float rayCastDist;
+
+    private void OnEnable()
+    {
+        rayCastDist = refGrid.GridSize;
+
+    }
     // Update is called once per frame
     void Update()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
+        Ray ray = new Ray(transform.position, transform.forward + transform.TransformDirection(orientation));
         RaycastHit hit;
-
         // If we hit
-        if (Physics.Raycast(ray, out hit, 1f, interactionMask))
-        {
-            if (component == null)
+        if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
+        { 
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Items"))
             {
-                objectHit = hit.transform.gameObject;
-                component = objectHit.GetComponent<Outline>();
-                if (component.enabled == false)
+                if (component == null)
                 {
-                    component.enabled = true;
+                    objectHit = hit.transform.gameObject;
+                    component = objectHit.GetComponent<Outline>();
+                    if (component.enabled == false)
+                    {
+                        component.enabled = true;
+                    }
+                }
+            }
+            else
+            {
+                if (component != null)
+                {
+                    if (component.enabled == true)
+                    {
+                        component.enabled = false;
+                        component = null;
+                    }
                 }
             }
         }

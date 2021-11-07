@@ -18,9 +18,14 @@ public class PlayerController : MonoBehaviour {
 
 	public Transform leftController;
 	public Transform rightController;
+	[SerializeField] private Vector3 orientation = new Vector3(0f,-3f,0f);
+
 	private Controls playerInput;
 	private InputAction interactLeft;
 	private InputAction interactRight;
+	[SerializeField] float rayCastDist = 1.0f;
+
+	public AnimatedGridMovement refGrid;
 
 	private void Awake()
     {
@@ -28,6 +33,8 @@ public class PlayerController : MonoBehaviour {
     }
     private void OnEnable()
     {
+		rayCastDist = refGrid.GridSize;
+
 		playerInput.Player.InteractLeft.performed += InteractLeft;
 		playerInput.Player.InteractLeft.Enable();
 
@@ -49,11 +56,11 @@ public class PlayerController : MonoBehaviour {
     {
 
 		// Shoot out a ray
-		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+		Ray ray = new Ray(leftController.position, leftController.forward + leftController.TransformDirection(orientation));
+		RaycastHit hit;
 
         // If we hit
-        if (Physics.Raycast(ray, out hit, 1f, interactionMask))
+        if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
         {
             SetFocus(hit.collider.GetComponent<Interactable>());
         }
@@ -62,13 +69,12 @@ public class PlayerController : MonoBehaviour {
 
 	void InteractRight(InputAction.CallbackContext button)
 	{
-		
+		print("Right");
 		// Shoot out a ray
-		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+		Ray ray = new Ray(rightController.position, rightController.forward + rightController.TransformDirection(orientation));
 		RaycastHit hit;
-
 		// If we hit
-		if (Physics.Raycast(ray, out hit, 1f, interactionMask))
+		if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
 		{
 			SetFocus(hit.collider.GetComponent<Interactable>());
 		}
