@@ -7,7 +7,7 @@ using UnityEngine.AI;
 	to be used as a base class.
 */
 
-[RequireComponent(typeof(ColorOnHover))]
+[RequireComponent(typeof(Outline))]
 public class Interactable : MonoBehaviour {
 
 	public float radius = 3f;

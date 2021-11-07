@@ -16,8 +16,11 @@ public class PlayerController : MonoBehaviour {
 
 	public Camera cam;              // Reference to our camera
 
+	public Transform leftController;
+	public Transform rightController;
 	private Controls playerInput;
-	private InputAction interact;
+	private InputAction interactLeft;
+	private InputAction interactRight;
 
 	private void Awake()
     {
@@ -25,12 +28,16 @@ public class PlayerController : MonoBehaviour {
     }
     private void OnEnable()
     {
-		playerInput.Player.Interact.performed += Interact;
-		playerInput.Player.Interact.Enable();
-    }
+		playerInput.Player.InteractLeft.performed += InteractLeft;
+		playerInput.Player.InteractLeft.Enable();
+
+		playerInput.Player.InteractRight.performed += InteractRight;
+		playerInput.Player.InteractRight.Enable();
+	}
     private void OnDisable()
     {
-		playerInput.Player.Interact.Disable();
+		playerInput.Player.InteractLeft.Disable();
+		playerInput.Player.InteractRight.Disable();
     }
     // Get references
     void Start ()
@@ -38,31 +45,38 @@ public class PlayerController : MonoBehaviour {
 		cam = Camera.main;
 	}
 
-	// Update is called once per frame
-	void Update () {
-
-		if (EventSystem.current.IsPointerOverGameObject())
-			return;
-
-    }
-
-    void Interact(InputAction.CallbackContext button)
+    void InteractLeft(InputAction.CallbackContext button)
     {
 
-        // Shoot out a ray
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+		// Shoot out a ray
+		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         // If we hit
-        if (Physics.Raycast(ray, out hit, 100f, interactionMask))
+        if (Physics.Raycast(ray, out hit, 1f, interactionMask))
         {
             SetFocus(hit.collider.GetComponent<Interactable>());
         }
 
     }
 
-    // Set our focus to a new focus
-    void SetFocus (Interactable newFocus)
+	void InteractRight(InputAction.CallbackContext button)
+	{
+		
+		// Shoot out a ray
+		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+
+		// If we hit
+		if (Physics.Raycast(ray, out hit, 1f, interactionMask))
+		{
+			SetFocus(hit.collider.GetComponent<Interactable>());
+		}
+
+	}
+
+	// Set our focus to a new focus
+	void SetFocus (Interactable newFocus)
 	{
 		if (onFocusChangedCallback != null)
 			onFocusChangedCallback.Invoke(newFocus);

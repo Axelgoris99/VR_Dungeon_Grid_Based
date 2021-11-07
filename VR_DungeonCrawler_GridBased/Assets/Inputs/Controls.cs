@@ -27,9 +27,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": ""Press""
                 },
                 {
-                    ""name"": ""Interact"",
+                    ""name"": ""InteractLeft"",
                     ""type"": ""Button"",
                     ""id"": ""a9b770ed-3fce-416f-ba5b-643ebe54e9dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""InteractRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""76d28097-19a2-451c-87fa-23352a93e2e3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -170,23 +178,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6abcb386-e54c-41c0-a1c4-eac86d6494fa"",
-                    ""path"": ""<XRController>{RightHand}/gripPressed"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Oculus Quest"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""af026d16-ab83-4174-ad39-c1456aaf3bf8"",
                     ""path"": ""<XRController>{LeftHand}/gripPressed"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Oculus Quest"",
-                    ""action"": ""Interact"",
+                    ""action"": ""InteractLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -197,7 +194,29 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard And Mouse"",
-                    ""action"": ""Interact"",
+                    ""action"": ""InteractLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5fc41202-5a7b-4318-af28-fecd65db24c0"",
+                    ""path"": ""<XRController>{RightHand}/gripPressed"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Oculus Quest"",
+                    ""action"": ""InteractRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aaafe3e4-a81c-4545-86b3-f3f89d130737"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard And Mouse"",
+                    ""action"": ""InteractRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -237,7 +256,8 @@ public class @Controls : IInputActionCollection, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_InteractLeft = m_Player.FindAction("InteractLeft", throwIfNotFound: true);
+        m_Player_InteractRight = m_Player.FindAction("InteractRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -288,13 +308,15 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_InteractLeft;
+    private readonly InputAction m_Player_InteractRight;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
         public PlayerActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
-        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @InteractLeft => m_Wrapper.m_Player_InteractLeft;
+        public InputAction @InteractRight => m_Wrapper.m_Player_InteractRight;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -307,9 +329,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
-                @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
-                @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @InteractLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractLeft;
+                @InteractLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractLeft;
+                @InteractLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractLeft;
+                @InteractRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractRight;
+                @InteractRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractRight;
+                @InteractRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractRight;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -317,9 +342,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Interact.started += instance.OnInteract;
-                @Interact.performed += instance.OnInteract;
-                @Interact.canceled += instance.OnInteract;
+                @InteractLeft.started += instance.OnInteractLeft;
+                @InteractLeft.performed += instance.OnInteractLeft;
+                @InteractLeft.canceled += instance.OnInteractLeft;
+                @InteractRight.started += instance.OnInteractRight;
+                @InteractRight.performed += instance.OnInteractRight;
+                @InteractRight.canceled += instance.OnInteractRight;
             }
         }
     }
@@ -345,6 +373,7 @@ public class @Controls : IInputActionCollection, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnInteract(InputAction.CallbackContext context);
+        void OnInteractLeft(InputAction.CallbackContext context);
+        void OnInteractRight(InputAction.CallbackContext context);
     }
 }

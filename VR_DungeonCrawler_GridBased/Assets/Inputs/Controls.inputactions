@@ -14,9 +14,17 @@
                     "interactions": "Press"
                 },
                 {
-                    "name": "Interact",
+                    "name": "InteractLeft",
                     "type": "Button",
                     "id": "a9b770ed-3fce-416f-ba5b-643ebe54e9dc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "InteractRight",
+                    "type": "Button",
+                    "id": "76d28097-19a2-451c-87fa-23352a93e2e3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -157,23 +165,12 @@
                 },
                 {
                     "name": "",
-                    "id": "6abcb386-e54c-41c0-a1c4-eac86d6494fa",
-                    "path": "<XRController>{RightHand}/gripPressed",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Oculus Quest",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "af026d16-ab83-4174-ad39-c1456aaf3bf8",
                     "path": "<XRController>{LeftHand}/gripPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "Oculus Quest",
-                    "action": "Interact",
+                    "action": "InteractLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -184,7 +181,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard And Mouse",
-                    "action": "Interact",
+                    "action": "InteractLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5fc41202-5a7b-4318-af28-fecd65db24c0",
+                    "path": "<XRController>{RightHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Oculus Quest",
+                    "action": "InteractRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aaafe3e4-a81c-4545-86b3-f3f89d130737",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard And Mouse",
+                    "action": "InteractRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
