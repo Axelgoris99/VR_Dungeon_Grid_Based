@@ -10,6 +10,8 @@ public class InventorySlot : MonoBehaviour {
 	public Image icon;
 	public Button removeButton;
 
+	public Mesh model;
+
 	Item item;	// Current item in the slot
 
 	// Add item to the slot
@@ -26,6 +28,7 @@ public class InventorySlot : MonoBehaviour {
 	public void ClearSlot ()
 	{
 		item = null;
+		model = null;
 
 		icon.sprite = null;
 		icon.enabled = false;
