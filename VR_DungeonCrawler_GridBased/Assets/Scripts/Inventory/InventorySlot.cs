@@ -6,33 +6,39 @@ using UnityEngine.EventSystems;
 /* Sits on all InventorySlots. */
 
 public class InventorySlot : MonoBehaviour {
+	public GameObject itemSlot;
+	Item item;  // Current item in the slot
+	Renderer render;
+	float radius;
 
-	public Image icon;
-	public Button removeButton;
+    private void Awake()
+    {
+		render = GetComponent<Renderer>();
+		radius = render.bounds.size.x;
+    }
 
-	public Mesh model;
-
-	Item item;	// Current item in the slot
-
-	// Add item to the slot
-	public void AddItem (Item newItem)
+    // Add item to the slot
+    public void AddItem (Item newItem)
 	{
+		itemSlot.transform.localScale = new Vector3(1f,1f,1f);
 		item = newItem;
+		itemSlot.GetComponent<MeshFilter>().mesh = item.mesh;
+		float diagonal = itemSlot.GetComponent<MeshRenderer>().bounds.size.magnitude;
 
-		icon.sprite = item.icon;
-		icon.enabled = true;
-		removeButton.interactable = true;
+		if(diagonal >= radius)
+        {
+			itemSlot.transform.localScale *= (radius/diagonal);
+        }
+
+
 	}
 
 	// Clear the slot
 	public void ClearSlot ()
 	{
 		item = null;
-		model = null;
+		itemSlot.GetComponent<MeshFilter>().mesh = null;
 
-		icon.sprite = null;
-		icon.enabled = false;
-		removeButton.interactable = false;
 	}
 
 	// If the remove button is pressed, this function will be called.

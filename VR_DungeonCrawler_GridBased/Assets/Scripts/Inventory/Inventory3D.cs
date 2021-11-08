@@ -7,11 +7,13 @@ public class Inventory3D : MonoBehaviour
     public GameObject backpack;  // The entire UI
     public Transform itemsParent;   // The parent object of all the items
 
-    Inventory inventory;	// Our current inventory
+    Inventory inventory;    // Our current inventory
+
     // Start is called before the first frame update
     void Start()
-    {
+	{ 
         inventory = Inventory.instance;
+
     }
 
 	// Check to see if we should open/close the inventory
@@ -24,11 +26,11 @@ public class Inventory3D : MonoBehaviour
 		}
 	}
 
-	// Update the inventory UI by:
-	//		- Adding items
-	//		- Clearing empty slots
-	// This is called using a delegate on the Inventory.
-	public void UpdateUI()
+    // Update the inventory UI by:
+    //		- Adding items
+    //		- Clearing empty slots
+    // This is called using a delegate on the Inventory.
+    public void UpdateUI()
 	{
 		InventorySlot[] slots = GetComponentsInChildren<InventorySlot>();
 

@@ -13,9 +13,10 @@ public class Interactable : MonoBehaviour {
 	public float radius = 3f;
 	public Transform interactionTransform;
 
-	bool isFocus = false;	// Is this interactable currently being focused?
-	Transform player;		// Reference to the player transform
-
+	bool isFocus = false;   // Is this interactable currently being focused?
+	public bool IsFocus;
+	Transform player;       // Reference to the player transform
+	Transform controller;
 	bool hasInteracted = false; // Have we already interacted with the object?
 
     private void Awake()
@@ -35,17 +36,18 @@ public class Interactable : MonoBehaviour {
 			{
 				// Interact with the object
 				hasInteracted = true;
-				Interact();
+				InHand(controller);
 			}
 		}
 	}
 
 	// Called when the object starts being focused
-	public void OnFocused (Transform playerTransform)
+	public void OnFocused (Transform playerTransform, Transform controllerTransform)
 	{
 		isFocus = true;
 		hasInteracted = false;
 		player = playerTransform;
+		controller = controllerTransform;
     }
 
 	// Called when the object is no longer focused
@@ -54,6 +56,24 @@ public class Interactable : MonoBehaviour {
 		isFocus = false;
 		hasInteracted = false;
 		player = null;
+		controller = null;
+		transform.parent = null;
+		RaycastHit hit;
+		if (Physics.Raycast(transform.position, Vector3.down, out hit))
+		{
+			/*
+			 * Set the target location to the location of the hit.
+			 */
+			Vector3 targetLocation = hit.point;
+			/*
+			 * Modify the target location so that the object is being perfectly aligned with the ground (if it's flat).
+			 */
+			targetLocation += new Vector3(0, transform.localScale.y / 2, 0);
+			/*
+			 * Move the object to the target location.
+			 */
+			transform.position = targetLocation;
+		}
 	}
 
 	// This method is meant to be overwritten
@@ -62,6 +82,11 @@ public class Interactable : MonoBehaviour {
 		
 	}
 
+	// This one too
+	public virtual void InHand(Transform controller)
+    {
+
+    }
 	void OnDrawGizmosSelected ()
 	{
 		Gizmos.color = Color.yellow;

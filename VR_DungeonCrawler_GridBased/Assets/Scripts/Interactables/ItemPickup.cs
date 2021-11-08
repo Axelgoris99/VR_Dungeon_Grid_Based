@@ -12,13 +12,18 @@ public class ItemPickup : Interactable {
 		PickUp();
 	}
 
+	public override void InHand(Transform controller)
+    {
+		transform.position = controller.position;
+		transform.parent = controller;	
+	}
 	// Pick up the item
 	void PickUp ()
 	{
 		Debug.Log("Picking up " + item.name);
 		Inventory.instance.Add(item);	// Add to inventory
-
 		Destroy(gameObject);	// Destroy item from scene
+
 	}
 
 }
