@@ -19,6 +19,7 @@ public class Interactable : MonoBehaviour {
 	Transform controller;
 	bool hasInteracted = false; // Have we already interacted with the object?
 
+	
     private void Awake()
     {
         if(interactionTransform == null)
@@ -68,7 +69,8 @@ public class Interactable : MonoBehaviour {
 			/*
 			 * Modify the target location so that the object is being perfectly aligned with the ground (if it's flat).
 			 */
-			targetLocation += new Vector3(0, transform.localScale.y / 2, 0);
+			
+			targetLocation += new Vector3(0, GetComponent<MeshRenderer>().bounds.extents.y, 0);
 			/*
 			 * Move the object to the target location.
 			 */

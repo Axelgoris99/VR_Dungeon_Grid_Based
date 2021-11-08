@@ -27,16 +27,23 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] float rayCastDist = 1.0f;
 	public bool interactingLeft = false;
 	public bool interactingRight = false;
+	public bool holdingInventory = false;
 
 	public AnimatedGridMovement refGrid;
 
 	public GameObject inventory3D;
 	BoxCollider boxInventory;
+	private Inventory3D invent;
+
+	public float heightBackpack = 0.65f;
+
+
 	private void Awake()
     {
 		playerInput = new Controls();
 		boxInventory = inventory3D.GetComponent<BoxCollider>();
-    }
+		invent = inventory3D.GetComponent<Inventory3D>();
+	}
     private void OnEnable()
     {
 		rayCastDist = refGrid.GridSize;
@@ -60,72 +67,81 @@ public class PlayerController : MonoBehaviour {
 
     void InteractLeft(InputAction.CallbackContext button)
     {
-		if (interactingLeft)
-		{
-			interactingLeft = false;
-			focusLeft.OnDefocused();
-			focusLeft = null;
-		}
-		if (!interactingLeft)
-		{
-			if (boxInventory.bounds.Intersects(leftController.GetComponent<BoxCollider>().bounds))
-			{
-				inventory3D.GetComponent<Inventory3D>().backpack.SetActive(true);
-				inventory3D.transform.parent = leftController;
-				inventory3D.transform.position = leftController.InverseTransformPoint(Vector3.zero);
-			}
-			else
-			{
-				// Shoot out a ray
-				Ray ray = new Ray(leftController.position, leftController.forward + leftController.TransformDirection(orientation));
-				//================= MOUSE AND KEYBOARD INSTEAD ============ //
-				ray = cam.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-
-				// If we hit
-				if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
-				{
-					SetFocus(ref focusLeft, hit.collider.GetComponent<Interactable>(), leftController);
-					interactingLeft = true;
-				}
-			}
-		}
-        
-
+		Interact(leftController, ref interactingLeft, ref focusLeft);     
     }
 
     void InteractRight(InputAction.CallbackContext button)
     {
-		if (interactingRight)
+		Interact(rightController, ref interactingRight, ref focusRight);
+	}
+
+
+	void Interact(Transform controller, ref bool interacting, ref Interactable focus)
+    {
+		if (interacting)
 		{
-			interactingRight = false;
-			focusRight.OnDefocused();
-			focusRight = null;
+			interacting = false;
+			focus.OnDefocused();
+			focus = null;
 		}
-		if (!interactingRight)
+		if (!interacting)
 		{
-			if (boxInventory.bounds.Intersects(rightController.GetComponent<BoxCollider>().bounds))
+			if (!holdingInventory)
 			{
-				inventory3D.GetComponent<Inventory3D>().backpack.SetActive(true);
-				inventory3D.transform.parent = rightController;
-				inventory3D.transform.position = rightController.TransformPoint(Vector3.zero);
-			}
-			else
-			{
-				// Shoot out a ray
-				Ray ray = new Ray(rightController.position, rightController.forward + rightController.TransformDirection(orientation));
-				RaycastHit hit;
-				// If we hit
-				if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
+				if (boxInventory.bounds.Intersects(controller.GetComponent<BoxCollider>().bounds))
 				{
-					SetFocus(ref focusRight, hit.collider.GetComponent<Interactable>(), rightController);
-					interactingRight = true;
+					invent.backpack.SetActive(true);
+					invent.UpdateUI();
+					inventory3D.transform.parent = controller;
+					inventory3D.transform.position = controller.TransformPoint(Vector3.zero);
+				}
+				else
+				{
+					// Shoot out a ray
+					Ray ray = new Ray(controller.position, controller.forward + controller.TransformDirection(orientation));
+					RaycastHit hit;
+					// If we hit
+					if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
+					{
+						SetFocus(ref focus, hit.collider.GetComponent<Interactable>(), controller);
+						interacting= true;
+					}
 				}
 			}
-		}
-        
+			if (holdingInventory)
+			{
+				inventory3D.transform.parent = null;
+				inventory3D.transform.rotation = Quaternion.identity;
+				RaycastHit hit;
+				if (Physics.Raycast(inventory3D.transform.position, Vector3.down, out hit))
+				{
+					/*
+					 * Set the target location to the location of the hit.
+					 */
+					Vector3 targetLocation = hit.point;
+					/*
+					 * Modify the target location so that the object is being perfectly aligned with the ground (if it's flat).
+					 */
+					targetLocation += new Vector3(0, heightBackpack, 0);
+					/*
+					 * Move the object to the target location.
+					 */
+					transform.position = targetLocation;
+				}
+			}
 
-    }
+		}
+
+		if (inventory3D.transform.parent == controller)
+		{
+			holdingInventory = true;
+		}
+		else
+		{
+			holdingInventory = false;
+		}
+	}
+
 
     // Set our focus to a new focus
     void SetFocus (ref Interactable side, Interactable newFocus, Transform controller)

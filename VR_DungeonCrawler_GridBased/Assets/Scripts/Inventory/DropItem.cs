@@ -6,10 +6,12 @@ public class DropItem : MonoBehaviour
 {
     BoxCollider box;
     public PlayerController player;
+    Inventory3D inventaire;
     // Start is called before the first frame update
     private void Awake()
     {
         box = GetComponent<BoxCollider>();
+        inventaire = player.inventory3D.GetComponent<Inventory3D>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -20,6 +22,7 @@ public class DropItem : MonoBehaviour
             {
                 player.focusLeft.Interact();
                 player.interactingLeft = false;
+                inventaire.UpdateUI();
             }
         }
         if (other.CompareTag("RightController"))
@@ -28,6 +31,7 @@ public class DropItem : MonoBehaviour
             {
                 player.focusRight.Interact();
                 player.interactingRight = false;
+                inventaire.UpdateUI();
             }
         }
     }

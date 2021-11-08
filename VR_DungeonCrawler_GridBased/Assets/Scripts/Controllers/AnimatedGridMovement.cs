@@ -37,6 +37,8 @@ public class AnimatedGridMovement : MonoBehaviour
     [SerializeField] private Transform mainCam;
     private Vector3[] axis = new Vector3[4];
 
+    public GameObject inventory;
+    private Vector3 originalInventoryPosition;
     private void Awake()
     {
         axis[0] = Vector3.forward;
@@ -46,6 +48,8 @@ public class AnimatedGridMovement : MonoBehaviour
 
 
         playerInput = new Controls();
+
+        originalInventoryPosition = inventory.transform.localPosition;
     }
 
     private void OnEnable()
@@ -73,10 +77,18 @@ public class AnimatedGridMovement : MonoBehaviour
         if (val.y > 0.5f)
         {
             MoveForward();
+            if (inventory.transform.parent == null)
+            {
+                ResetInventory();
+            }
         }
         else if (val.y < -0.5f)
         {
             MoveBackward();
+            if (inventory.transform.parent == null)
+            {
+                ResetInventory();
+            }
         }
         else if (val.x < -0.5f)
         {
@@ -86,6 +98,13 @@ public class AnimatedGridMovement : MonoBehaviour
         {
             TurnRight();
         }
+    }
+
+    void ResetInventory()
+    {
+        inventory.transform.parent = transform;
+        inventory.GetComponent<Inventory3D>().backpack.SetActive(false);
+        inventory.transform.localPosition = originalInventoryPosition;
     }
 
     private void FixedUpdate()

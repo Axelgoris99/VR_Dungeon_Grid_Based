@@ -8,7 +8,7 @@ public class Inventory3D : MonoBehaviour
     public Transform itemsParent;   // The parent object of all the items
 
     Inventory inventory;    // Our current inventory
-
+	public float tol = 90f;
     // Start is called before the first frame update
     void Start()
 	{ 
@@ -19,11 +19,16 @@ public class Inventory3D : MonoBehaviour
 	// Check to see if we should open/close the inventory
 	void Update()
 	{
-		if (Input.GetButtonDown("Inventory"))
-		{
-			backpack.SetActive(!backpack.activeSelf);
-			UpdateUI();
-		}
+		//Vector3 euler = transform.rotation.eulerAngles;
+		//if (euler.x < 360-tol && euler.x > 360/2 ) euler.x = 360-tol;
+		//else if (euler.x > tol && euler.x < 360/2) euler.x = tol;
+		//if (euler.y< 360 - tol && euler.y > 360 / 2) euler.y = 360 - tol;
+		//else if (euler.y > tol && euler.y < 360 / 2) euler.y = tol;
+		//if (euler.z < 360 - tol && euler.z > 360 / 2) euler.z = 360 - tol;
+		//else if (euler.z > tol && euler.z < 360 / 2) euler.z = tol;
+
+		//transform.rotation = Quaternion.Euler(euler);
+        
 	}
 
     // Update the inventory UI by:
