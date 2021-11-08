@@ -32,11 +32,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: b5f43c223f3f34cea87469d5ac6f33f7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 75cc622dad1f747268be252f6f01e4ab, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _F0: 0.35
+    - _F0: 0
     - _RimLightIntensity: 0.4
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

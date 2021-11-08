@@ -38,7 +38,11 @@ public class AnimatedGridMovement : MonoBehaviour
     private Vector3[] axis = new Vector3[4];
 
     public GameObject inventory;
+    private Vector3 originalBoxSize;
     private Vector3 originalInventoryPosition;
+    private BoxCollider boxColli;
+    private Transform initialParent;
+
     private void Awake()
     {
         axis[0] = Vector3.forward;
@@ -49,7 +53,10 @@ public class AnimatedGridMovement : MonoBehaviour
 
         playerInput = new Controls();
 
+        boxColli = inventory.GetComponent<BoxCollider>();
         originalInventoryPosition = inventory.transform.localPosition;
+        originalBoxSize = boxColli.size;
+        initialParent = inventory.transform.parent;
     }
 
     private void OnEnable()
@@ -102,9 +109,10 @@ public class AnimatedGridMovement : MonoBehaviour
 
     void ResetInventory()
     {
-        inventory.transform.parent = transform;
+        inventory.transform.parent = initialParent;
         inventory.GetComponent<Inventory3D>().backpack.SetActive(false);
         inventory.transform.localPosition = originalInventoryPosition;
+        boxColli.size = originalBoxSize;
     }
 
     private void FixedUpdate()

@@ -17,8 +17,6 @@ public class GetDamaged : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Touch");
-        Debug.Log(collision.gameObject.layer.ToString());
         if (collision.gameObject.layer == LayerMask.NameToLayer("Weapon"))
         {
             Debug.Log("Successful hit");

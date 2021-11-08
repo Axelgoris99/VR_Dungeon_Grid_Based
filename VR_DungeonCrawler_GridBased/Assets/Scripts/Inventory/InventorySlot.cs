@@ -8,6 +8,10 @@ using UnityEngine.EventSystems;
 public class InventorySlot : MonoBehaviour {
 	public GameObject itemSlot;
 	Item item;  // Current item in the slot
+	public Item Item
+    {
+        get { return item; }
+    }
 	Renderer render;
 	float radius;
 
@@ -22,7 +26,8 @@ public class InventorySlot : MonoBehaviour {
 	{
 		itemSlot.transform.localScale = new Vector3(1f,1f,1f);
 		item = newItem;
-		itemSlot.GetComponent<MeshFilter>().mesh = item.mesh;
+		itemSlot.GetComponent<MeshFilter>().mesh = item.prefabObject.GetComponent<MeshFilter>().sharedMesh;
+		itemSlot.GetComponent<MeshRenderer>().materials = item.prefabObject.GetComponent<MeshRenderer>().sharedMaterials;
 		float diagonal = itemSlot.GetComponent<MeshRenderer>().bounds.size.magnitude;
 
 		if(diagonal >= radius)

@@ -8,7 +8,7 @@ public class Inventory3D : MonoBehaviour
     public Transform itemsParent;   // The parent object of all the items
 
     Inventory inventory;    // Our current inventory
-	public float tol = 90f;
+	//public float tol = 90f;
     // Start is called before the first frame update
     void Start()
 	{ 
@@ -27,7 +27,8 @@ public class Inventory3D : MonoBehaviour
 		//if (euler.z < 360 - tol && euler.z > 360 / 2) euler.z = 360 - tol;
 		//else if (euler.z > tol && euler.z < 360 / 2) euler.z = tol;
 
-		//transform.rotation = Quaternion.Euler(euler);
+		transform.rotation = Quaternion.Euler(0,transform.rotation.eulerAngles.y,0);
+
         
 	}
 

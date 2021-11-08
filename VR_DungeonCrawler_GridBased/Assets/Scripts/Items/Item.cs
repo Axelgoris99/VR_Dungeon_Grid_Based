@@ -6,8 +6,7 @@ using UnityEngine;
 public class Item : ScriptableObject {
 
 	new public string name = "New Item";	// Name of the item
-	public Sprite icon = null;              // Item icon
-	public Mesh mesh = null;
+	public GameObject prefabObject = null;
 	public bool showInInventory = true;
 
 	// Called when the item is pressed in the inventory
