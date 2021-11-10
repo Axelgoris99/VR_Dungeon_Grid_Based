@@ -22,7 +22,6 @@ public class DropItem : MonoBehaviour
             {
                 player.focusLeft.Interact();
                 player.interactingLeft = false;
-                inventaire.UpdateUI();
             }
         }
         if (other.CompareTag("RightController"))
@@ -31,7 +30,6 @@ public class DropItem : MonoBehaviour
             {
                 player.focusRight.Interact();
                 player.interactingRight = false;
-                inventaire.UpdateUI();
             }
         }
     }

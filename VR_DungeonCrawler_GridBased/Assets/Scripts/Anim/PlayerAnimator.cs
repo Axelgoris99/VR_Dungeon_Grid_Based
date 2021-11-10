@@ -31,17 +31,17 @@ public class PlayerAnimator : CharacterAnimator {
 	void OnEquipmentChanged(Equipment newItem, Equipment oldItem) {
 		
 		if (oldItem != null) {
-			if (oldItem.equipSlot == EquipmentSlot.Weapon) {
+			if (oldItem.equipSlot == EquipmentSlot.RightHand) {
 				animator.SetLayerWeight (1, 0); // right hand grip full weight
 			}
-			if (oldItem.equipSlot == EquipmentSlot.Shield) {
+			if (oldItem.equipSlot == EquipmentSlot.LeftHand) {
 				animator.SetLayerWeight (2, 0); // left hand grip full weight
 			}
 		}
 
 		if (newItem != null) {
 			
-			if (newItem.equipSlot == EquipmentSlot.Weapon) {
+			if (newItem.equipSlot == EquipmentSlot.RightHand) {
 				WeaponAnimation newC = weaponAnimations.First (x => x.weapons.Contains (newItem));
 				if (newC != null) {
 					currentWeaponAnimation = newC;
@@ -49,7 +49,7 @@ public class PlayerAnimator : CharacterAnimator {
 				}
 				animator.SetLayerWeight (1, 1); // right hand grip full weight
 			}
-			if (newItem.equipSlot == EquipmentSlot.Shield) {
+			if (newItem.equipSlot == EquipmentSlot.LeftHand) {
 				animator.SetLayerWeight (2, 1); // left hand grip full weight
 			}
 		}

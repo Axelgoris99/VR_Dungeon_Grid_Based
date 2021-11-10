@@ -33,7 +33,10 @@ public class PlayerController : MonoBehaviour {
 	public GameObject inventory3D;
 	BoxCollider boxInventory;
 	private Inventory3D invent;
-	Vector3 originalSizeBox; 
+	Vector3 originalSizeBox;
+	public HandsEquipment weaponSpawnManagerLeft;
+	public HandsEquipment weaponSpawnManagerRight;
+
 
 	public float heightBackpack = 0.65f;
 
@@ -47,8 +50,10 @@ public class PlayerController : MonoBehaviour {
 	}
     private void OnEnable()
     {
+		//Moving on the grid
 		rayCastDist = refGrid.GridSize;
 
+		//Enable new input system
 		playerInput.Player.InteractLeft.performed += InteractLeft;
 		playerInput.Player.InteractLeft.Enable();
 
@@ -68,35 +73,45 @@ public class PlayerController : MonoBehaviour {
 
     void InteractLeft(InputAction.CallbackContext button)
     {
-		Interact(leftController, ref interactingLeft, ref focusLeft, ref holdingInventoryLeft);     
+		Interact(leftController, ref interactingLeft, ref focusLeft, ref holdingInventoryLeft, ref weaponSpawnManagerRight);     
     }
 
     void InteractRight(InputAction.CallbackContext button)
     {
-		Interact(rightController, ref interactingRight, ref focusRight, ref holdingInventoryRight);
+		Interact(rightController, ref interactingRight, ref focusRight, ref holdingInventoryRight, ref weaponSpawnManagerRight);
 	}
 
 
-	void Interact(Transform controller, ref bool interacting, ref Interactable focus, ref bool holdingInventory)
+	void Interact(Transform controller, ref bool interacting, ref Interactable focus, ref bool holdingInventory, ref HandsEquipment weaponSpawn)
     {
+		//If you're already interacting with this hand
 		if (interacting)
 		{
 			interacting = false;
 			focus.OnDefocused();
+			if (!weaponSpawn.spawn.enabled)
+			{
+				weaponSpawn.ActivateSpawnWeapon();
+			}
 			focus = null;
+
 		}
 		if (!interacting)
 		{
 			if (!holdingInventory)
 			{
+				//If you're in the inventory zone than you pick it out
 				if (boxInventory.bounds.Intersects(controller.GetComponent<BoxCollider>().bounds))
 				{
+					//Ativate the inventory
 					invent.backpack.SetActive(true);
+					//Update it's UI
 					invent.UpdateUI();
 					inventory3D.transform.parent = controller;
 					inventory3D.transform.position = controller.TransformPoint(Vector3.zero);
 					boxInventory.size = originalSizeBox /= 3;
 				}
+				//Else it means you're looking at something different
 				else
 				{
 					// Shoot out a ray
@@ -106,10 +121,15 @@ public class PlayerController : MonoBehaviour {
 					if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
 					{
 						SetFocus(ref focus, hit.collider.GetComponent<Interactable>(), controller);
+						if (!weaponSpawn.spawn.enabled)
+						{
+							weaponSpawn.ActivateSpawnWeapon();
+						}
 						interacting = true;
 					}
 				}
 			}
+			//If you're holding the inventory, than you drop it onto the ground
 			if (holdingInventory)
 			{
 				inventory3D.transform.parent = null;
@@ -145,7 +165,7 @@ public class PlayerController : MonoBehaviour {
 
 
     // Set our focus to a new focus
-    void SetFocus (ref Interactable side, Interactable newFocus, Transform controller)
+    public void SetFocus (ref Interactable side, Interactable newFocus, Transform controller)
 	{
 		if (onFocusChangedCallback != null)
 			onFocusChangedCallback.Invoke(newFocus);
@@ -155,6 +175,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			// Let our previous focus know that it's no longer being focused
 			side.OnDefocused();
+			
 		}
 
 		// Set our focus to what we hit

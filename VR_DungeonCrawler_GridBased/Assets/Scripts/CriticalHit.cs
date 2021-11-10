@@ -19,7 +19,6 @@ public class CriticalHit : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("test");
         if (collision.gameObject.layer == LayerMask.NameToLayer("Weapon"))
         {
             if(collision.relativeVelocity.x > 2*collision.relativeVelocity.y && collision.relativeVelocity.x > 2*collision.relativeVelocity.z)

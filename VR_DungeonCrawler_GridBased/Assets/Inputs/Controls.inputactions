@@ -28,6 +28,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "UseObjectLeft",
+                    "type": "Button",
+                    "id": "a8155187-641a-4415-a780-7058446ed750",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "UseObjectRight",
+                    "type": "Button",
+                    "id": "aacc8c9b-4932-4d7e-bef1-3760d884d7af",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -204,6 +220,28 @@
                     "processors": "",
                     "groups": "Keyboard And Mouse",
                     "action": "InteractRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "09338239-8eac-4ccb-804f-1e05fd1419aa",
+                    "path": "<XRController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UseObjectLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "26066b27-2d81-4cdb-b8e4-24173311bf87",
+                    "path": "<XRController>{RightHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UseObjectRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

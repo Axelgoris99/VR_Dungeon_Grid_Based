@@ -24,7 +24,7 @@ public class ControllersOutline : MonoBehaviour
         // If we hit
         if (Physics.Raycast(ray, out hit, rayCastDist, interactionMask))
         { 
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Items"))
+            if (hit.transform.gameObject.layer != LayerMask.NameToLayer("wallMask"))
             {
                 if (component == null)
                 {

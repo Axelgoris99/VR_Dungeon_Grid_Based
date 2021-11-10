@@ -13,7 +13,7 @@ public class Inventory3D : MonoBehaviour
     void Start()
 	{ 
         inventory = Inventory.instance;
-
+		inventory.onItemChangedCallback += UpdateUI;
     }
 
 	// Check to see if we should open/close the inventory

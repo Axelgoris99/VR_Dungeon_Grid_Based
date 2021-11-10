@@ -24,4 +24,9 @@ public class ItemPickup : Interactable {
 		Destroy(gameObject);	// Destroy item from scene
 	}
 
+	public override void Use()
+    {
+		item.Use();
+		Destroy(gameObject);
+    }
 }

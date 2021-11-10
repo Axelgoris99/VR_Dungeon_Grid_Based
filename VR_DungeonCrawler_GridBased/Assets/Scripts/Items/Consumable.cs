@@ -11,12 +11,10 @@ public class Consumable : Item {
 	public override void Use()
 	{
 		// Heal the player
-		PlayerStats playerStats = Player.instance.playerStats;
-		playerStats.Heal(healthGain);
+		//PlayerStats playerStats = Player.instance.playerStats;
+		//playerStats.Heal(healthGain);
 
 		Debug.Log(name + " consumed!");
-
-		RemoveFromInventory();	// Remove the item after use
 	}
 
 }

@@ -65,6 +65,5 @@ public class RetrieveItems : MonoBehaviour
         invent.ClearSlot();
         
         interacting = true;
-        inventaire.UpdateUI();
     }
 }

@@ -28,7 +28,7 @@ public class EquipmentManager : MonoBehaviour {
 
 	public Equipment[] defaultWear;
 
-	Equipment[] currentEquipment;
+	public Equipment[] currentEquipment;
 	SkinnedMeshRenderer[] currentMeshes;
 
 	public SkinnedMeshRenderer targetMesh;
@@ -39,7 +39,7 @@ public class EquipmentManager : MonoBehaviour {
 
 	Inventory inventory;
 
-	void Start ()
+	void OnEnable ()
 	{
 		inventory = Inventory.instance;
 
@@ -50,11 +50,6 @@ public class EquipmentManager : MonoBehaviour {
 		EquipAllDefault ();
 	}
 
-	void Update() {
-		if (Input.GetKeyDown (KeyCode.U)) {
-			UnequipAll ();
-		}
-	}
 
 
 	public Equipment GetEquipment(EquipmentSlot slot) {
@@ -87,9 +82,10 @@ public class EquipmentManager : MonoBehaviour {
 		currentEquipment [slotIndex] = newItem;
 		Debug.Log(newItem.name + " equipped!");
 
-		if (newItem.prefab) {
-			AttachToMesh (newItem.prefab, slotIndex);
-		}
+		//if (newItem.prefab) {
+		//	AttachToMesh (newItem.prefab, slotIndex);
+		//}
+		
 		//equippedItems [itemIndex] = newMesh.gameObject;
 
 	}
@@ -128,6 +124,10 @@ public class EquipmentManager : MonoBehaviour {
 		}
 	}
 
+	void AttackToPlayer()
+    {
+
+    }
 	void AttachToMesh(SkinnedMeshRenderer mesh, int slotIndex) {
 
 		if (currentMeshes [slotIndex] != null) {

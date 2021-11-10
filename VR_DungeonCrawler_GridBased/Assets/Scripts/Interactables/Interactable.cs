@@ -13,11 +13,11 @@ public class Interactable : MonoBehaviour {
 	public float radius = 3f;
 	public Transform interactionTransform;
 
-	bool isFocus = false;   // Is this interactable currently being focused?
+	protected bool isFocus = false;   // Is this interactable currently being focused?
 	public bool IsFocus;
-	Transform player;       // Reference to the player transform
-	Transform controller;
-	bool hasInteracted = false; // Have we already interacted with the object?
+	protected Transform player;       // Reference to the player transform
+	protected Transform controller;
+	protected bool hasInteracted = false; // Have we already interacted with the object?
 
 	
     private void Awake()
@@ -52,7 +52,7 @@ public class Interactable : MonoBehaviour {
     }
 
 	// Called when the object is no longer focused
-	public void OnDefocused ()
+	public virtual void OnDefocused ()
 	{
 		isFocus = false;
 		hasInteracted = false;
@@ -89,6 +89,11 @@ public class Interactable : MonoBehaviour {
     {
 
     }
+
+	public virtual void Use()
+	{
+		
+	}
 	void OnDrawGizmosSelected ()
 	{
 		Gizmos.color = Color.yellow;

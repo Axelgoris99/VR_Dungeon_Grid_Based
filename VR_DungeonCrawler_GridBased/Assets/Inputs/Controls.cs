@@ -41,6 +41,22 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""UseObjectLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""a8155187-641a-4415-a780-7058446ed750"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""UseObjectRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""aacc8c9b-4932-4d7e-bef1-3760d884d7af"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -219,6 +235,28 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""InteractRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09338239-8eac-4ccb-804f-1e05fd1419aa"",
+                    ""path"": ""<XRController>{LeftHand}/primaryButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseObjectLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""26066b27-2d81-4cdb-b8e4-24173311bf87"",
+                    ""path"": ""<XRController>{RightHand}/primaryButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseObjectRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -258,6 +296,8 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_InteractLeft = m_Player.FindAction("InteractLeft", throwIfNotFound: true);
         m_Player_InteractRight = m_Player.FindAction("InteractRight", throwIfNotFound: true);
+        m_Player_UseObjectLeft = m_Player.FindAction("UseObjectLeft", throwIfNotFound: true);
+        m_Player_UseObjectRight = m_Player.FindAction("UseObjectRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -310,6 +350,8 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_InteractLeft;
     private readonly InputAction m_Player_InteractRight;
+    private readonly InputAction m_Player_UseObjectLeft;
+    private readonly InputAction m_Player_UseObjectRight;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -317,6 +359,8 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @InteractLeft => m_Wrapper.m_Player_InteractLeft;
         public InputAction @InteractRight => m_Wrapper.m_Player_InteractRight;
+        public InputAction @UseObjectLeft => m_Wrapper.m_Player_UseObjectLeft;
+        public InputAction @UseObjectRight => m_Wrapper.m_Player_UseObjectRight;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -335,6 +379,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @InteractRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractRight;
                 @InteractRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractRight;
                 @InteractRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractRight;
+                @UseObjectLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseObjectLeft;
+                @UseObjectLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseObjectLeft;
+                @UseObjectLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseObjectLeft;
+                @UseObjectRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseObjectRight;
+                @UseObjectRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseObjectRight;
+                @UseObjectRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseObjectRight;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -348,6 +398,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @InteractRight.started += instance.OnInteractRight;
                 @InteractRight.performed += instance.OnInteractRight;
                 @InteractRight.canceled += instance.OnInteractRight;
+                @UseObjectLeft.started += instance.OnUseObjectLeft;
+                @UseObjectLeft.performed += instance.OnUseObjectLeft;
+                @UseObjectLeft.canceled += instance.OnUseObjectLeft;
+                @UseObjectRight.started += instance.OnUseObjectRight;
+                @UseObjectRight.performed += instance.OnUseObjectRight;
+                @UseObjectRight.canceled += instance.OnUseObjectRight;
             }
         }
     }
@@ -375,5 +431,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnInteractLeft(InputAction.CallbackContext context);
         void OnInteractRight(InputAction.CallbackContext context);
+        void OnUseObjectLeft(InputAction.CallbackContext context);
+        void OnUseObjectRight(InputAction.CallbackContext context);
     }
 }
